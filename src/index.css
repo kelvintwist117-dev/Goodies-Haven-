@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Oswald", sans-serif;
+
+  --color-brand-green: #2C4A1E;
+  --color-brand-gold: #D4A017;
+  --color-brand-brown: #3E1F00;
+  --color-brand-cream: #FDF6EC;
+  --color-brand-charcoal: #2C2C2C;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-brand-green);
+    color: var(--color-brand-cream);
+  }
+}
+
+.price-badge {
+  @apply bg-brand-gold text-brand-brown font-black px-4 py-1 rounded-full inline-block shadow-lg;
+  font-size: 0.9rem;
+}
+
+.card-dark {
+  @apply bg-brand-brown/80 border border-brand-gold/30 rounded-xl p-6 shadow-2xl backdrop-blur-sm transition-all duration-300;
+}
+
+.cta-button {
+  @apply bg-brand-gold text-brand-brown font-display font-black py-3 px-8 rounded-md shadow-xl hover:scale-105 transition-transform duration-200 text-center uppercase tracking-wider active:scale-95;
+}
+
+.floating-wa {
+  @apply fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_30px_rgba(37,211,102,0.3)] hover:scale-110 transition-transform duration-300;
+}
+
+.nav-link {
+  @apply text-brand-cream/80 hover:text-brand-gold transition-colors uppercase font-display text-sm font-bold tracking-widest;
+}

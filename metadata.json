@@ -1,0 +1,8 @@
+{
+  "name": "Goodies Haven",
+  "description": "The Craftsmen of Flavor - High-converting ghost kitchen website for Rustenburg's best street food, Kotas and Sandwiches.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
