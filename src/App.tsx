@@ -96,9 +96,20 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen font-sans bg-brand-green text-brand-cream">
+    <div className="flex flex-col min-h-screen font-sans bg-brand-green text-brand-cream relative">
+      {/* Skip to Content Link */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-gold focus:text-brand-brown focus:px-6 focus:py-3 focus:rounded-md focus:font-bold"
+      >
+        Skip to main content
+      </a>
+
       {/* 1. Sticky Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/40 backdrop-blur-xl py-2 border-b border-white/10' : 'bg-transparent py-4'}`}>
+      <nav 
+        aria-label="Main Navigation"
+        className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/40 backdrop-blur-xl py-2 border-b border-white/10' : 'bg-transparent py-4'}`}
+      >
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex flex-col">
             <span className="font-display text-2xl font-black tracking-tight text-brand-gold">GOODIES HAVEN</span>
@@ -111,19 +122,32 @@ export default function App() {
               <a 
                 key={link.name} 
                 href={link.href} 
+                aria-current={activeSection === link.href.substring(1) ? 'page' : undefined}
                 className={`nav-link ${activeSection === link.href.substring(1) ? 'text-brand-gold' : ''}`}
               >
                 {link.name}
               </a>
             ))}
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="cta-button py-2 px-6 text-xs ring-1 ring-white/10">
+            <a 
+              href={WHATSAPP_URL} 
+              target="_blank" 
+              rel="noreferrer" 
+              aria-label="Order on WhatsApp (Opens in a new tab)"
+              className="cta-button py-2 px-6 text-xs ring-1 ring-white/10"
+            >
               Order on WhatsApp
             </a>
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-brand-cream font-bold">
-            {isMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className="md:hidden text-brand-cream font-bold"
+          >
+            {isMenuOpen ? <X size={28} aria-hidden="true" /> : <MenuIcon size={28} aria-hidden="true" />}
           </button>
         </div>
 
@@ -131,6 +155,7 @@ export default function App() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
+              id="mobile-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -142,12 +167,19 @@ export default function App() {
                     key={link.name} 
                     href={link.href} 
                     onClick={() => setIsMenuOpen(false)}
+                    aria-current={activeSection === link.href.substring(1) ? 'page' : undefined}
                     className="text-brand-cream text-lg uppercase font-display font-bold"
                   >
                     {link.name}
                   </a>
                 ))}
-                <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="cta-button w-4/5 text-center">
+                <a 
+                  href={WHATSAPP_URL} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  aria-label="Order on WhatsApp (Opens in a new tab)"
+                  className="cta-button w-4/5 text-center"
+                >
                   Order on WhatsApp
                 </a>
               </div>
@@ -156,7 +188,7 @@ export default function App() {
         </AnimatePresence>
       </nav>
 
-      <main>
+      <main id="main-content">
         {/* 2. Hero Section */}
         <section className="relative min-h-[90vh] flex items-center justify-center pt-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-brand-green via-brand-brown to-brand-charcoal z-0" />
@@ -206,10 +238,19 @@ export default function App() {
               transition={{ delay: 0.6 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="cta-button w-full sm:w-auto px-10 py-5 text-xl flex items-center justify-center gap-2">
-                Order on WhatsApp <Flame className="animate-pulse" />
+              <a 
+                href={WHATSAPP_URL} 
+                target="_blank" 
+                rel="noreferrer" 
+                aria-label="Order on WhatsApp (Opens in a new tab)"
+                className="cta-button w-full sm:w-auto px-10 py-5 text-xl flex items-center justify-center gap-2"
+              >
+                Order on WhatsApp <Flame className="animate-pulse" aria-hidden="true" />
               </a>
-              <a href="#menu" className="w-full sm:w-auto px-10 py-5 border-2 border-brand-cream/50 text-brand-cream font-display font-bold rounded-lg hover:bg-brand-cream hover:text-brand-brown transition-all uppercase tracking-wide">
+              <a 
+                href="#menu" 
+                className="w-full sm:w-auto px-10 py-5 border-2 border-brand-cream/50 text-brand-cream font-display font-bold rounded-lg hover:bg-brand-cream hover:text-brand-brown transition-all uppercase tracking-wide"
+              >
                 See Our Menu
               </a>
             </motion.div>
@@ -220,12 +261,13 @@ export default function App() {
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
               className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-brand-cream/10 pt-12"
+              aria-label="Why choose Goodies Haven"
             >
               {[
-                { icon: <Flame size={20} />, text: "Loaded & Satisfying" },
-                { icon: <Timer size={20} />, text: "Fast Delivery" },
-                { icon: <MapPin size={20} />, text: "Rustenburg CBD" },
-                { icon: <ShoppingBag size={20} />, text: "Fresh Daily" }
+                { icon: <Flame size={20} aria-hidden="true" />, text: "Loaded & Satisfying" },
+                { icon: <Timer size={20} aria-hidden="true" />, text: "Fast Delivery" },
+                { icon: <MapPin size={20} aria-hidden="true" />, text: "Rustenburg CBD" },
+                { icon: <ShoppingBag size={20} aria-hidden="true" />, text: "Fresh Daily" }
               ].map((badge, idx) => (
                 <div key={idx} className="flex items-center justify-center gap-2 text-brand-cream/70">
                   <span className="text-brand-gold">{badge.icon}</span>
@@ -243,8 +285,14 @@ export default function App() {
               <h3 className="font-display font-black text-2xl md:text-3xl leading-tight uppercase italic">GET R5 OFF YOUR NEXT MEAL!</h3>
               <p className="font-bold opacity-90 text-sm">Simply have your friend place an order!</p>
             </div>
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="bg-brand-brown text-brand-gold font-display font-black py-3 px-8 rounded-lg shadow-xl hover:scale-105 transition-transform uppercase tracking-wider text-sm flex items-center gap-2">
-              Share with a Friend <ChevronRight size={18} />
+            <a 
+              href={WHATSAPP_URL} 
+              target="_blank" 
+              rel="noreferrer" 
+              aria-label="Share with a friend on WhatsApp (Opens in a new tab)"
+              className="bg-brand-brown text-brand-gold font-display font-black py-3 px-8 rounded-lg shadow-xl hover:scale-105 transition-transform uppercase tracking-wider text-sm flex items-center gap-2"
+            >
+              Share with a Friend <ChevronRight size={18} aria-hidden="true" />
             </a>
           </div>
           {/* Background Pattern */}
@@ -268,14 +316,17 @@ export default function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {KOTA_ITEMS.map((item, idx) => (
-                <motion.div 
+                <motion.article 
                   key={item.id}
                   {...fadeIn}
                   transition={{ delay: idx * 0.1 }}
                   className="card-dark group"
                 >
                   <div className="flex items-start gap-4 mb-6">
-                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center font-display font-black text-2xl text-brand-gold shrink-0">
+                    <div 
+                      className="w-12 h-12 bg-white/5 border border-white/10 rounded flex items-center justify-center font-display font-black text-2xl text-brand-gold shrink-0"
+                      aria-hidden="true"
+                    >
                       0{item.id}
                     </div>
                     <div className="flex-1">
@@ -283,17 +334,21 @@ export default function App() {
                         <h3 className="text-xl font-display font-black text-brand-cream uppercase leading-none group-hover:text-brand-gold transition-colors">
                           {item.name}
                         </h3>
-                        <span className="price-badge scale-90 origin-right whitespace-nowrap">{item.price}</span>
+                        <span className="price-badge scale-90 origin-right whitespace-nowrap" aria-label={`Price: ${item.price}`}>{item.price}</span>
                       </div>
                       <p className="text-brand-cream/60 text-xs leading-relaxed">
                         {item.desc}
                       </p>
                     </div>
                   </div>
-                  <button onClick={() => window.open(WHATSAPP_URL)} className="w-full py-4 rounded-md bg-white/5 border border-white/10 text-brand-gold font-display font-black uppercase tracking-wider text-xs hover:bg-brand-gold hover:text-brand-brown transition-all flex items-center justify-center gap-2">
-                    Order Now <ShoppingBag size={14} />
+                  <button 
+                    onClick={() => window.open(WHATSAPP_URL)} 
+                    aria-label={`Order ${item.name} on WhatsApp`}
+                    className="w-full py-4 rounded-md bg-white/5 border border-white/10 text-brand-gold font-display font-black uppercase tracking-wider text-xs hover:bg-brand-gold hover:text-brand-brown transition-all flex items-center justify-center gap-2"
+                  >
+                    Order Now <ShoppingBag size={14} aria-hidden="true" />
                   </button>
-                </motion.div>
+                </motion.article>
               ))}
             </div>
 
@@ -319,24 +374,30 @@ export default function App() {
             </motion.div>
 
             <div className="max-w-2xl mx-auto">
-              <motion.div 
+              <motion.article 
                 {...fadeIn}
                 className="bg-brand-green p-8 rounded-3xl shadow-2xl border border-brand-gold/20 flex flex-col md:flex-row items-center gap-8 text-center md:text-left"
               >
-                <div className="w-40 h-40 bg-brand-gold flex items-center justify-center rounded-2xl shrink-0 shadow-inner">
+                <div className="w-40 h-40 bg-brand-gold flex items-center justify-center rounded-2xl shrink-0 shadow-inner" aria-hidden="true">
                   <Timer size={80} className="text-brand-brown" />
                 </div>
                 <div>
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
                     <h3 className="text-3xl font-display font-black text-brand-gold uppercase">Morning Sandwich</h3>
-                    <span className="price-badge text-lg md:ml-4">R30</span>
+                    <span className="price-badge text-lg md:ml-4" aria-label="Price: R30">R30</span>
                   </div>
                   <p className="text-brand-cream/80 text-lg mb-6">Cheese, Vienna, Egg — The ultimate breakfast combo on fresh bread.</p>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="cta-button inline-flex items-center gap-2">
-                    Order Breakfast on WhatsApp <MessageSquare size={18} />
+                  <a 
+                    href={WHATSAPP_URL} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    aria-label="Order Breakfast on WhatsApp (Opens in a new tab)"
+                    className="cta-button inline-flex items-center gap-2"
+                  >
+                    Order Breakfast on WhatsApp <MessageSquare size={18} aria-hidden="true" />
                   </a>
                 </div>
-              </motion.div>
+              </motion.article>
             </div>
           </div>
           {/* Background Circles */}
@@ -366,9 +427,9 @@ export default function App() {
                 
                 <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
                   {[
-                    { title: "Craftsmen of Flavor", icon: <CheckCircle2 className="text-brand-gold" size={18} /> },
-                    { title: "Loaded Every Time", icon: <CheckCircle2 className="text-brand-gold" size={18} /> },
-                    { title: "Proudly Rustenburg", icon: <CheckCircle2 className="text-brand-gold" size={18} /> }
+                    { title: "Craftsmen of Flavor", icon: <CheckCircle2 className="text-brand-gold" size={18} aria-hidden="true" /> },
+                    { title: "Loaded Every Time", icon: <CheckCircle2 className="text-brand-gold" size={18} aria-hidden="true" /> },
+                    { title: "Proudly Rustenburg", icon: <CheckCircle2 className="text-brand-gold" size={18} aria-hidden="true" /> }
                   ].map((prop, idx) => (
                     <div key={idx} className="flex items-center gap-2">
                       {prop.icon}
@@ -392,7 +453,7 @@ export default function App() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-brand-brown to-transparent" />
                       <div className="absolute bottom-8 left-8">
-                        <Flame size={48} className="text-brand-gold mb-2" />
+                        <Flame size={48} className="text-brand-gold mb-2" aria-hidden="true" />
                         <span className="font-display text-4xl font-black text-brand-cream uppercase leading-none block">Our Kitchen,<br />Your Haven.</span>
                       </div>
                    </div>
@@ -415,9 +476,9 @@ export default function App() {
               <p className="text-brand-cream/60">Hungry? We've made it simple.</p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative" aria-label="Steps to place an order">
               {/* Connector lines (Desktop) */}
-              <div className="hidden md:block absolute top-1/2 left-1/4 right-1/4 h-1 border-t-2 border-dashed border-brand-gold/30 -z-0" />
+              <div className="hidden md:block absolute top-1/2 left-1/4 right-1/4 h-1 border-t-2 border-dashed border-brand-gold/30 -z-0" aria-hidden="true" />
               
               {[
                 { step: "01", title: "Browse", desc: "Check out our loaded menu above and pick your flavor." },
@@ -430,7 +491,10 @@ export default function App() {
                   transition={{ delay: idx * 0.2 }}
                   className="relative z-10 flex flex-col items-center"
                 >
-                  <div className="w-16 h-16 bg-brand-gold text-brand-brown rounded-full flex items-center justify-center font-display font-black text-2xl mb-6 shadow-[0_0_20px_rgba(212,160,23,0.3)]">
+                  <div 
+                    className="w-16 h-16 bg-brand-gold text-brand-brown rounded-full flex items-center justify-center font-display font-black text-2xl mb-6 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
+                    aria-hidden="true"
+                  >
                     {item.step}
                   </div>
                   <h3 className="text-2xl font-display font-black mb-3 uppercase tracking-wide">{item.title}</h3>
@@ -440,8 +504,14 @@ export default function App() {
             </div>
 
             <motion.div {...fadeIn} className="mt-16">
-              <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="cta-button inline-flex items-center gap-3 text-lg py-4 px-12">
-                Order Now on WhatsApp <Flame size={20} className="animate-bounce" />
+              <a 
+                href={WHATSAPP_URL} 
+                target="_blank" 
+                rel="noreferrer" 
+                aria-label="Order Now on WhatsApp (Opens in a new tab)"
+                className="cta-button inline-flex items-center gap-3 text-lg py-4 px-12"
+              >
+                Order Now on WhatsApp <Flame size={20} className="animate-bounce" aria-hidden="true" />
               </a>
             </motion.div>
           </div>
@@ -454,25 +524,27 @@ export default function App() {
               <h2 className="text-5xl font-display font-black text-brand-gold uppercase mb-4 tracking-tighter">
                 The People Have Spoken 🙌
               </h2>
-              <div className="flex justify-center gap-1">
-                {[...Array(5)].map((_, i) => <Star key={i} size={18} className="fill-brand-gold text-brand-gold" />)}
+              <div className="flex justify-center gap-1" aria-label="5 star rating">
+                {[...Array(5)].map((_, i) => <Star key={i} size={18} className="fill-brand-gold text-brand-gold" aria-hidden="true" />)}
               </div>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {TESTIMONIALS.map((t, idx) => (
-                <motion.div 
+                <motion.article 
                   key={idx}
                   {...fadeIn}
                   transition={{ delay: idx * 0.1 }}
                   className="bg-black/30 backdrop-blur-md p-8 rounded-xl border border-white/5 flex flex-col"
                 >
-                  <div className="flex gap-1 mb-4">
+                  <div className="flex gap-1 mb-4" aria-label="5 stars">
                     <span className="text-[#D4A017] text-xs">★★★★★</span>
                     <span className="text-[10px] font-bold opacity-50 uppercase ml-2 tracking-widest">{t.name} — {t.area}</span>
                   </div>
-                  <p className="text-brand-cream/90 italic mb-6 leading-relaxed text-sm">"{t.text}"</p>
-                </motion.div>
+                  <blockquote className="text-brand-cream/90 italic mb-6 leading-relaxed text-sm">
+                    "{t.text}"
+                  </blockquote>
+                </motion.article>
               ))}
             </div>
           </div>
@@ -487,45 +559,47 @@ export default function App() {
                 
                 <div className="space-y-8">
                   <div className="flex items-start gap-4">
-                    <div className="bg-brand-gold p-3 rounded-lg text-brand-brown shrink-0">
+                    <div className="bg-brand-gold p-3 rounded-lg text-brand-brown shrink-0" aria-hidden="true">
                       <MapPin size={24} />
                     </div>
                     <div>
-                      <h4 className="font-display font-black uppercase text-brand-gold tracking-wide mb-1">Our Location</h4>
+                      <h3 className="font-display font-black uppercase text-brand-gold tracking-wide mb-1 text-sm">Our Location</h3>
                       <p className="text-lg">Shop 12, Klipgat Centre, Corner Nelson Mandela & Pres. Mbeki Drive, Rustenburg</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="bg-brand-gold p-3 rounded-lg text-brand-brown shrink-0">
+                    <div className="bg-brand-gold p-3 rounded-lg text-brand-brown shrink-0" aria-hidden="true">
                       <Phone size={24} />
                     </div>
                     <div>
-                      <h4 className="font-display font-black uppercase text-brand-gold tracking-wide mb-1">Call / WhatsApp</h4>
+                      <h3 className="font-display font-black uppercase text-brand-gold tracking-wide mb-1 text-sm">Call / WhatsApp</h3>
                       <p className="text-lg font-bold">+27 81 821 4395</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="bg-brand-gold p-3 rounded-lg text-brand-brown shrink-0">
+                    <div className="bg-brand-gold p-3 rounded-lg text-brand-brown shrink-0" aria-hidden="true">
                       <Clock size={24} />
                     </div>
                     <div>
-                      <h4 className="font-display font-black uppercase text-brand-gold tracking-wide mb-1">Crave Hours</h4>
+                      <h3 className="font-display font-black uppercase text-brand-gold tracking-wide mb-1 text-sm">Crave Hours</h3>
                       <p className="text-lg">Mon–Sun, 7AM–9PM</p>
                     </div>
                   </div>
 
                   <div className="p-6 bg-brand-brown/50 border border-brand-gold/20 rounded-xl inline-flex items-center gap-3">
-                    <ShoppingBag className="text-brand-gold shrink-0" />
+                    <ShoppingBag className="text-brand-gold shrink-0" aria-hidden="true" />
                     <p className="text-sm font-bold uppercase tracking-widest">Delivery only within Rustenburg CBD (5 km radius)</p>
                   </div>
                 </div>
 
                 <div className="mt-12 flex gap-4">
-                  <a href="#" className="p-3 bg-brand-cream/10 rounded-full hover:bg-brand-gold hover:text-brand-brown transition-all"><Facebook size={20} /></a>
-                  <a href="#" className="p-3 bg-brand-cream/10 rounded-full hover:bg-brand-gold hover:text-brand-brown transition-all"><Instagram size={20} /></a>
-                  <svg className="w-5 h-5 fill-current opacity-80" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.59-5.71-.29-3.27 2.2-6.43 5.39-7.04.13-.02.26-.03.4-.04v4.06c-.12.02-.24.04-.36.07-.37.08-.74.24-1.06.47-.79.57-1.29 1.53-1.26 2.51.01.62.19 1.25.5 1.78.65 1.07 1.88 1.77 3.13 1.78 1.19.01 2.37-.62 3.03-1.61.34-.51.52-1.12.53-1.74.03-3.08.01-6.17.02-9.25z"/></svg>
+                  <a href="#" aria-label="Visit our Facebook page" className="p-3 bg-brand-cream/10 rounded-full hover:bg-brand-gold hover:text-brand-brown transition-all"><Facebook size={20} aria-hidden="true" /></a>
+                  <a href="#" aria-label="Visit our Instagram page" className="p-3 bg-brand-cream/10 rounded-full hover:bg-brand-gold hover:text-brand-brown transition-all"><Instagram size={20} aria-hidden="true" /></a>
+                  <a href="#" aria-label="Visit our TikTok page" className="p-3 bg-brand-cream/10 rounded-full hover:bg-brand-gold hover:text-brand-brown transition-all">
+                    <svg className="w-5 h-5 fill-current opacity-80" aria-hidden="true" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.59-5.71-.29-3.27 2.2-6.43 5.39-7.04.13-.02.26-.03.4-.04v4.06c-.12.02-.24.04-.36.07-.37.08-.74.24-1.06.47-.79.57-1.29 1.53-1.26 2.51.01.62.19 1.25.5 1.78.65 1.07 1.88 1.77 3.13 1.78 1.19.01 2.37-.62 3.03-1.61.34-.51.52-1.12.53-1.74.03-3.08.01-6.17.02-9.25z"/></svg>
+                  </a>
                 </div>
               </motion.div>
 
@@ -536,16 +610,25 @@ export default function App() {
               >
                 <div className="absolute inset-0 flex items-center justify-center text-center p-8">
                   <div className="space-y-4">
-                    <MapPin size={48} className="mx-auto text-brand-gold animate-bounce" />
+                    <MapPin size={48} className="mx-auto text-brand-gold animate-bounce" aria-hidden="true" />
                     <h5 className="font-display font-black text-2xl uppercase italic">Find us on Google Maps</h5>
                     <p className="text-brand-cream/60 max-w-sm mx-auto">Shop 12, Klipgat Centre. Right in the heart of Rustenburg CBD.</p>
-                    <a href="https://www.google.com/maps" target="_blank" rel="noreferrer" className="inline-block mt-4 text-brand-gold font-bold underline underline-offset-4 uppercase tracking-widest text-sm">Open Map</a>
+                    <a 
+                      href="https://www.google.com/maps" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      aria-label="View our location on Google Maps (Opens in a new tab)"
+                      className="inline-block mt-4 text-brand-gold font-bold underline underline-offset-4 uppercase tracking-widest text-sm"
+                    >
+                      Open Map
+                    </a>
                   </div>
                 </div>
                 {/* Background image for map feeling */}
                 <img 
                   src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000" 
-                  alt="City Map" 
+                  alt="" 
+                  aria-hidden="true"
                   className="w-full h-full object-cover opacity-20 filter grayscale"
                 />
               </motion.div>
@@ -554,20 +637,20 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="bg-brand-charcoal border-t border-brand-cream/5 py-12">
+      <footer className="bg-brand-charcoal border-t border-brand-cream/5 py-12" role="contentinfo">
         <div className="max-w-7xl mx-auto px-4 flex flex-col items-center gap-8">
           <div className="text-center">
             <span className="font-display text-3xl font-black text-brand-gold tracking-tighter uppercase block mb-1">GOODIES HAVEN</span>
             <span className="text-brand-cream font-bold italic opacity-80 uppercase tracking-widest text-xs">"Come Hungry. Leave Happy."</span>
           </div>
 
-          <div className="flex gap-8">
+          <nav className="flex gap-8" aria-label="Footer Navigation">
             {navLinks.map(link => (
               <a key={link.name} href={link.href} className="text-brand-cream/50 hover:text-brand-gold transition-colors uppercase font-display text-[11px] font-bold tracking-widest">
                 {link.name}
               </a>
             ))}
-          </div>
+          </nav>
 
           <p className="text-brand-cream/30 text-[10px] uppercase font-bold tracking-[0.2em] pt-8 border-t border-brand-cream/5 w-full text-center">
             &copy; 2025 Goodies Haven. All Rights Reserved. Rustenburg, South Africa.
@@ -580,13 +663,14 @@ export default function App() {
         href={WHATSAPP_URL}
         target="_blank"
         rel="noreferrer"
+        aria-label="Order on WhatsApp (Always available)"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.1 }}
         className="floating-wa shadow-[#25D366]/20"
       >
-        <MessageSquare size={28} />
-        <span className="absolute -top-1 -right-1 bg-brand-gold w-4 h-4 rounded-full border-2 border-[#25D366] animate-ping" />
+        <MessageSquare size={28} aria-hidden="true" />
+        <span className="absolute -top-1 -right-1 bg-brand-gold w-4 h-4 rounded-full border-2 border-[#25D366] animate-ping" aria-hidden="true" />
       </motion.a>
     </div>
   );
